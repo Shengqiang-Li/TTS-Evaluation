@@ -1,0 +1,14 @@
+tqdm
+argparse
+librosa
+numpy
+pypesq
+torch
+modelscope
+transformers
+sherpa_onnx
+edit_distance
+faster_whisper
+pymcd
+pydub
+parselmouth
