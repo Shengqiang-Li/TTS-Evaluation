@@ -31,7 +31,7 @@ $$
 where $\mathbf{f0}$ refers to the ground-truth f0, and $\hat{\mathbf{f0}}$ refers to the predicted f0. $N$ refers to the dimension of the vector.
 # Installation
 ```
-pip install -r requirements
+pip install -r requirements.txt
 ```
 # Usage
 ```
