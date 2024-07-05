@@ -106,8 +106,8 @@ def main():
                 result_dict['wer'] = wer_['wer']
                 result_dict['ref'] = wer_['ref']
                 result_dict['hyp'] = wer_['hyp']
-                result_dict['del'] = wer_['wer']
-                result_dict['sub'] = wer_['wer']
+                result_dict['del'] = wer_['del']
+                result_dict['sub'] = wer_['sub']
                 result_dict['ins'] = wer_['ins']
 
                 mcd = extract_mcd(audio_ref, audio_deg)
