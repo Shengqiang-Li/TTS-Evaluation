@@ -37,7 +37,7 @@ def clean_text_zh(text):
 
 
 def infer_en(audio_deg):
-    model = WhisperModel(WhisperModel("large-v3"))
+    model = WhisperModel("large-v3")
     segments, info = model.transcribe(
         audio_deg,
         language="en",
@@ -45,11 +45,11 @@ def infer_en(audio_deg):
         vad_filter=True,
         vad_parameters=dict(min_silence_duration_ms=700)
     )
-    content_pred = ""
+    hyp_text = ""
     for segment in segments:
-        content_pred += segment.text
-    content_pred = content_pred.rstrip().strip()
-    return content_pred
+        hyp_text += segment.text
+    hyp_text = hyp_text.rstrip().strip()
+    return hyp_text
 
 
 def infer_zh(audio_deg):
@@ -65,8 +65,8 @@ def infer_zh(audio_deg):
     stream = recognizer.create_stream()
     stream.accept_waveform(16000, audio)
     recognizer.decode_stream(stream)
-    rec_text = stream.result.text
-    return rec_text
+    hyp_text = stream.result.text
+    return hyp_text
 
 
 def get_wer(ref_text, hyp_text, lang):

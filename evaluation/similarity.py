@@ -23,7 +23,6 @@ def extract_sim_eres2net(wav1_path, wav_2path, lang):
     assert lang in ['zh', 'en']
     spk1_wav, _ = librosa.load(wav1_path, sr=16000)
     spk2_wav, _ = librosa.load(wav_2path, sr=16000)
-    assert lang in ['zh', 'en']
     if lang == 'zh':
         sv_pipline = pipeline(
             task='speaker-verification',
