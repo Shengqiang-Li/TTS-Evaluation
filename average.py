@@ -41,6 +41,7 @@ def main():
     f0_rmse_lst = []
     utmos_lst = []
     mcd_lst = []
+    cos_sim_lst = []
     with open(args.input_file, 'r') as fin:
         for line in fin.readlines():
             line_dict = json.loads(line)
@@ -49,18 +50,21 @@ def main():
             f0_rmse = float(line_dict['f0_rmse'])
             utmos = float(line_dict['utmos'])
             mcd = float(line_dict['mcd'])
+            cos_sim = float(line_dict['cos_sim'])
 
             pesq_lst.append(pesq)
             wer_lst.append(wer)
             f0_rmse_lst.append(f0_rmse)
             utmos_lst.append(utmos)
             mcd_lst.append(mcd)
+            cos_sim_lst.append(cos_sim)
     out_dict = {}
     out_dict['pesq'] = str(sum(pesq_lst) / len(pesq_lst))
     out_dict['wer'] = str(sum(wer_lst) / len(wer_lst))
     out_dict['f0_rmse'] = str(sum(f0_rmse_lst) / len(f0_rmse_lst))
     out_dict['utmos'] = str(sum(utmos_lst) / len(utmos_lst))
     out_dict['mcd'] = str(sum(mcd_lst) / len(mcd_lst))
+    out_dict['cos_sim'] = str(sum(cos_sim_lst) / len(cos_sim_lst))
     with open(args.result_file, 'w') as fout:
         json.dump(out_dict, fout)
     print(out_dict)

@@ -18,7 +18,7 @@ from tqdm import tqdm
 from evaluation.pesq import extract_pesq
 from evaluation.f0_rmse import extract_f0rmse
 from evaluation.similarity import extract_sim_eres2net, extract_sim_wavlm_base
-from evaluation.wer import infer_zh, infer_en, get_wer
+from evaluation.asr_pipeline import ASRPipeline
 from evaluation.mel_cepstral_distortion import extract_mcd
 from evaluation.utmos import extract_utmos
 
@@ -75,6 +75,7 @@ def main():
     assert args.lang in ['zh', 'en']
     assert args.method in ['cut', 'dtw']
     assert args.sim_model in ['eres2net', 'wavlm']
+    recogizer = ASRPipeline(lang=args.lang)
     with open(args.input_file, 'r') as fin:
         with open(args.result_file, 'w') as fout:
             for line in tqdm(fin.readlines()):
@@ -98,11 +99,11 @@ def main():
                 result_dict['f0_rmse'] = f0_rmse
 
                 if args.lang == 'zh':
-                    hyp_text = infer_zh(audio_deg)
-                    wer_ = get_wer(ref_text, hyp_text, 'zh')
+                    hyp_text = recogizer.infer_zh(audio_deg)
+                    wer_ = recogizer.get_wer(ref_text, hyp_text)
                 elif args.lang == 'en':
-                    hyp_text = infer_en(audio_deg)
-                    wer_ = get_wer(ref_text, hyp_text, 'en')
+                    hyp_text = recogizer.infer_en(audio_deg)
+                    wer_ = recogizer.get_wer(ref_text, hyp_text)
                 result_dict['wer'] = wer_['wer']
                 result_dict['ref'] = wer_['ref']
                 result_dict['hyp'] = wer_['hyp']
