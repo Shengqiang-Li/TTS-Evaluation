@@ -17,7 +17,7 @@ import argparse
 from tqdm import tqdm
 from evaluation.pesq import extract_pesq
 from evaluation.f0_rmse import extract_f0rmse
-from evaluation.similarity import extract_sim_eres2net, extract_sim_wavlm_base
+from evaluation.sv_pipeline import SVPipeline
 from evaluation.asr_pipeline import ASRPipeline
 from evaluation.mel_cepstral_distortion import extract_mcd
 from evaluation.utmos import extract_utmos
@@ -75,7 +75,8 @@ def main():
     assert args.lang in ['zh', 'en']
     assert args.method in ['cut', 'dtw']
     assert args.sim_model in ['eres2net', 'wavlm']
-    recogizer = ASRPipeline(lang=args.lang)
+    asr_model = ASRPipeline(lang=args.lang)
+    sv_model = SVPipeline(model=args.sim_model, lang=args.lang, device=args.device)
     with open(args.input_file, 'r') as fin:
         with open(args.result_file, 'w') as fout:
             for line in tqdm(fin.readlines()):
@@ -89,21 +90,18 @@ def main():
                 pesq = extract_pesq(audio_ref, audio_deg, method=args.method)
                 result_dict['pesq'] = pesq
 
-                if args.sim_model == 'wavlm':
-                    cos_sim = extract_sim_wavlm_base(audio_ref, audio_deg, args.device)
-                elif args.sim_model == 'eres2net':
-                    cos_sim = extract_sim_eres2net(audio_ref, audio_deg, args.lang)['score']
+                cos_sim = sv_model.compute_cos_sim_score(audio_ref, audio_deg)
                 result_dict['cos_sim'] = cos_sim
 
                 f0_rmse = extract_f0rmse(audio_ref, audio_deg, method=args.method)
                 result_dict['f0_rmse'] = f0_rmse
 
                 if args.lang == 'zh':
-                    hyp_text = recogizer.infer_zh(audio_deg)
-                    wer_ = recogizer.get_wer(ref_text, hyp_text)
+                    hyp_text = asr_model.infer_zh(audio_deg)
+                    wer_ = asr_model.get_wer(ref_text, hyp_text)
                 elif args.lang == 'en':
-                    hyp_text = recogizer.infer_en(audio_deg)
-                    wer_ = recogizer.get_wer(ref_text, hyp_text)
+                    hyp_text = asr_model.infer_en(audio_deg)
+                    wer_ = asr_model.get_wer(ref_text, hyp_text)
                 result_dict['wer'] = wer_['wer']
                 result_dict['ref'] = wer_['ref']
                 result_dict['hyp'] = wer_['hyp']
@@ -116,6 +114,7 @@ def main():
 
                 utmos = extract_utmos(audio_ref, audio_deg, args.device)
                 result_dict['utmos'] = utmos
+
                 fout.writelines(json.dumps(result_dict, ensure_ascii=False) + '\n')
         return
 
