@@ -41,4 +41,4 @@ bash run.sh
 - [ ] Visqol score.
 - [ ] voice/unvoice errors.
 # Acknowledgement
-- We borrow a lot of code from [Amphion](https://github.com/open-mmlab/Amphion) for some evaluation mectrics computation.
+- We borrow a little of code from [Amphion](https://github.com/open-mmlab/Amphion) for some evaluation mectrics computation.
