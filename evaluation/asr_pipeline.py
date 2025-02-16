@@ -13,12 +13,11 @@
 # limitations under the License.
 
 import string
-import librosa
-import sherpa_onnx
+import zhconv
 import edit_distance
 from zhon import hanzi
 from faster_whisper import WhisperModel
-from modelscope import snapshot_download
+from funasr import AutoModel
 
 
 class ASRPipeline:
@@ -28,14 +27,8 @@ class ASRPipeline:
         if self.lang == 'en':
             self.asr_model = WhisperModel("large-v3")
         if self.lang == 'zh':
-            asr_repo_dir = snapshot_download("pengzhendong/offline-paraformer-zh")
-            self.asr_model = sherpa_onnx.OfflineRecognizer.from_paraformer(
-                paraformer=f"{asr_repo_dir}/model.onnx",
-                tokens=f"{asr_repo_dir}/tokens.txt",
-                num_threads=1,
-                sample_rate=16000,
-                feature_dim=80
-            )
+            self.asr_model = AutoModel(model="paraformer-zh")
+
 
     def clean_text_en(self, text):
         punctuation_str = string.punctuation
@@ -46,15 +39,15 @@ class ASRPipeline:
 
 
     def clean_text_zh(self, text):
-        punctuation_str = hanzi.punctuation
+        punctuation_str = hanzi.punctuation + " "
         for i in punctuation_str:
             text = text.replace(i, '')
         return text
 
 
-    def infer_en(self, audio_deg):
+    def infer_en(self, wav):
         segments, info = self.asr_model.transcribe(
-            audio_deg,
+            wav,
             language="en",
             beam_size=5,
             vad_filter=True,
@@ -67,12 +60,10 @@ class ASRPipeline:
         return hyp_text
 
 
-    def infer_zh(self, audio_deg):
-        audio, _ = librosa.load(audio_deg, sr=16000)
-        stream = self.asr_model.create_stream()
-        stream.accept_waveform(16000, audio)
-        self.asr_model.decode_stream(stream)
-        hyp_text = stream.result.text
+    def infer_zh(self, wav):
+        res = self.asr_model.generate(input=wav, batch_size_s=300)
+        hyp_text = res[0]["text"]
+        hyp_text = zhconv.convert(hyp_text, 'zh-cn')
         return hyp_text
 
 

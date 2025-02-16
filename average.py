@@ -38,6 +38,9 @@ def main():
     args = get_args()
     pesq_lst = []
     wer_lst = []
+    ins_lst = []
+    del_lst = []
+    sub_lst = []
     f0_rmse_lst = []
     utmos_lst = []
     mcd_lst = []
@@ -47,6 +50,9 @@ def main():
             line_dict = json.loads(line)
             pesq = float(line_dict['pesq'])
             wer = float(line_dict['wer'])
+            ins = float(line_dict['ins'])
+            del_ = float(line_dict['del'])
+            sub = float(line_dict['sub'])
             f0_rmse = float(line_dict['f0_rmse'])
             utmos = float(line_dict['utmos'])
             mcd = float(line_dict['mcd'])
@@ -54,6 +60,9 @@ def main():
 
             pesq_lst.append(pesq)
             wer_lst.append(wer)
+            ins_lst.append(ins)
+            del_lst.append(del_)
+            sub_lst.append(sub)
             f0_rmse_lst.append(f0_rmse)
             utmos_lst.append(utmos)
             mcd_lst.append(mcd)
@@ -61,6 +70,9 @@ def main():
     out_dict = {}
     out_dict['pesq'] = str(sum(pesq_lst) / len(pesq_lst))
     out_dict['wer'] = str(sum(wer_lst) / len(wer_lst))
+    out_dict['ins'] = str(sum(ins_lst) / len(ins_lst))
+    out_dict['del'] = str(sum(del_lst) / len(del_lst))
+    out_dict['sub'] = str(sum(sub_lst) / len(sub_lst))
     out_dict['f0_rmse'] = str(sum(f0_rmse_lst) / len(f0_rmse_lst))
     out_dict['utmos'] = str(sum(utmos_lst) / len(utmos_lst))
     out_dict['mcd'] = str(sum(mcd_lst) / len(mcd_lst))

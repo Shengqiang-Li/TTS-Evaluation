@@ -1,4 +1,4 @@
-{"text": "内存现在还剩多少", "gt_wav": "./examples/ref_wav/20895.wav", "out_key": "20895"}
-{"text": "到高中我们的关系才慢慢变好", "gt_wav": "./examples/ref_wav/21019.wav", "out_key": "21019"}
-{"text": "他被依法逮捕后为了逃避法律制裁大肆翻供情节严重态度恶劣给办案工作设置障碍", "gt_wav": "./examples/ref_wav/21146.wav", "out_key": "21146"}
-{"text": "很负责的说哦第二次来啦", "gt_wav": "./examples/ref_wav/21156.wav", "out_key": "21156"}
+{"text": "内存现在还剩多少", "ref_wav": "./examples/ref_wav/20895.wav", "key": "20895"}
+{"text": "到高中我们的关系才慢慢变好", "ref_wav": "./examples/ref_wav/21019.wav", "key": "21019"}
+{"text": "他被依法逮捕后为了逃避法律制裁大肆翻供情节严重态度恶劣给办案工作设置障碍", "ref_wav": "./examples/ref_wav/21146.wav", "key": "21146"}
+{"text": "很负责的说哦第二次来啦", "ref_wav": "./examples/ref_wav/21156.wav", "key": "21156"}

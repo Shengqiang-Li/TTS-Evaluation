@@ -82,8 +82,8 @@ def main():
             for line in tqdm(fin.readlines()):
                 line_dict = json.loads(line)
                 ref_text = line_dict['text']
-                audio_ref = line_dict['gt_wav']
-                wav_name = line_dict['out_key'] + '.wav'
+                audio_ref = line_dict['ref_wav']
+                wav_name = line_dict['key'] + '.wav'
                 audio_deg = f'{args.wav_dir}/{wav_name}'
                 result_dict = {'gen_wav': audio_deg}
 
@@ -103,8 +103,8 @@ def main():
                     hyp_text = asr_model.infer_en(audio_deg)
                     wer_ = asr_model.get_wer(ref_text, hyp_text)
                 result_dict['wer'] = wer_['wer']
-                result_dict['ref'] = wer_['ref']
-                result_dict['hyp'] = wer_['hyp']
+                result_dict['ref_txt'] = wer_['ref']
+                result_dict['hyp_txt'] = wer_['hyp']
                 result_dict['del'] = wer_['del']
                 result_dict['sub'] = wer_['sub']
                 result_dict['ins'] = wer_['ins']
